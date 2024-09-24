@@ -16,6 +16,7 @@
 #include <math.h>
 #include <assert.h>
 #include <strings.h>
+#include <iostream>
 
 //to compile on both apple and unix platform
 #ifdef __APPLE__
@@ -83,11 +84,8 @@ const int WINDOWSIZE = 500;
    user can cycle through them by pressing 'i'. Check out the display()
    function.
 */
-int NB_INIT_CHOICES = 4; 
+int NB_INIT_CHOICES = 11; 
 int  POINT_INIT_MODE = 0; //the first inititalizer
-
-
-
 
 
 /********************************************************************/
@@ -117,14 +115,12 @@ void initialize_points_horizontal_line(vector<point2d>&pts, int n);
 void initialize_points_random(vector<point2d>&pts, int n) ;
 void initialize_points_cross(vector<point2d>&pts, int n) ;
 
-//you'll add more 
+// Customized initializer
+void initialize_points_vertical_line(vector<point2d>&pts, int n);
+void initialize_points_star(vector<point2d>& pts, int n);
 
 
 /********************************************************************/
-
-
-
-
 
 
 /* ****************************** */
@@ -154,11 +150,21 @@ void initialize_points_circle(vector<point2d>& pts, int n) {
     p.y = WINDOWSIZE/2+ radius*sin(i*step); 
     pts.push_back(p); 
   }
-  
 }
 
 
-
+void initialize_points_vertical_line(vector<point2d>&pts, int n){
+  printf("\ninitialize points vertical line\n"); 
+  //clear the vector just to be safe 
+  pts.clear(); 
+  
+  point2d p; 
+  for (int i=0; i<n; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/2; 
+    pts.push_back(p); 
+  }
+}
 
 
 /* ****************************** */
@@ -216,22 +222,36 @@ void initialize_points_cross(vector<point2d>& pts, int n) {
   point2d p; 
   for (int i=0; i<n; i++) {
     if (i%2 == 0) {
-      
       p.x = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
       p.y =  random() % ((int)(.7*WINDOWSIZE))  / 5;
       p.y += (int)((1-.7/5)*WINDOWSIZE/2);
     };
     if (i%2 == 1)  {
-      
       p.x = random() % ((int)(.7*WINDOWSIZE)) / 5; 
       p.x +=  (int)((1-.7/5)*WINDOWSIZE/2);
       p.y =  (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE));
     }
-   
     pts.push_back(p); 
-    
-  }//for i
+  }
+}
 
+void initialize_points_two_vertical(vector<point2d>& pts, int n) {
+  
+  printf("\ninitialize points that make two vertical lines.\n"); 
+    //clear the vector just to be safe 
+  pts.clear(); 
+  
+  point2d p; 
+  for (int i=0; i<n/2; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/2; 
+    pts.push_back(p); 
+  }
+    for (int i=0; i<n/2; i++) {
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
+    p.x =  WINDOWSIZE/4; 
+    pts.push_back(p); 
+  }
 }
 
 
@@ -249,6 +269,9 @@ void print_vector(const char* label, vector<point2d> points) {
 }
 
 
+// For testing geom.cpp
+// int main(int argc, char** argv){
+// }
 
 
 
@@ -425,7 +448,13 @@ void keypress(unsigned char key, int x, int y) {
       break; 
     case 3: 
       initialize_points_random(points, NPOINTS); 
+      break;
+    case 4:
+      initialize_points_vertical_line(points, NPOINTS); 
       break; 
+    case 5:
+      initialize_points_two_vertical(points, NPOINTS);
+      break;
     } //switch 
     //we changed the points, so we need to recompute the hull
     graham_scan(points, hull); 

@@ -12,8 +12,14 @@ using namespace std;
    is to the left of ab, and negative if c is to the right of ab
  */
 int signed_area2D(point2d a, point2d b, point2d c) {
-
-  return 1; 
+  point2d A; // a to b -- A
+  point2d B; // a to c -- B
+  B.x = c.x - a.x;
+  B.y = c.y - a.y;
+  A.x = b.x - a.x;
+  A.y = b.y - a.y;
+  double parallelogram_area = B.y * A.x - B.x * A.y;
+  return parallelogram_area / 2; 
 }
 
 
@@ -21,24 +27,30 @@ int signed_area2D(point2d a, point2d b, point2d c) {
 /* **************************************** */
 /* return 1 if p,q,r collinear, and 0 otherwise */
 int collinear(point2d p, point2d q, point2d r) {
-  
-  return 1; 
+  return signed_area2D(p, q, r) == 0; 
 }
 
 
 
 /* **************************************** */
 /* return 1 if c is  strictly left of ab; 0 otherwise */
+// Signed Area should be positive if c is to the left
 int left_strictly(point2d a, point2d b, point2d c) {
-  
-  return 1; 
+  int signed_area = signed_area2D(a, b, c);
+  if (signed_area > 0){
+    return 1;
+  }
+  return 0; 
 }
 
 
 /* return 1 if c is left of ab or on ab; 0 otherwise */
 int left_on(point2d a, point2d b, point2d c) {
-
-  return 1; 
+  int signed_area = signed_area2D(a, b, c);
+  if (signed_area > 0 || signed_area == 0){
+    return 1;
+  }
+  return 0; 
 }
 
 

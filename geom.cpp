@@ -11,7 +11,7 @@ using namespace std;
 /* returns the signed area of triangle abc. The area is positive if c
    is to the left of ab, and negative if c is to the right of ab
  */
-int signed_area2D(point2d a, point2d b, point2d c) {
+double signed_area2D(point2d a, point2d b, point2d c) {
   point2d A; // a to b -- A
   point2d B; // a to c -- B
   B.x = c.x - a.x;

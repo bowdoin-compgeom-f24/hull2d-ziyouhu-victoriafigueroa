@@ -16,7 +16,7 @@ typedef struct _point2d {
    positive if c is to the left of ab, 0 if a,b,c are collinear and
    negative if c is to the right of ab
  */
-int signed_area2D(point2d a, point2d b, point2d c); 
+double signed_area2D(point2d a, point2d b, point2d c); 
 
 
 /* return 1 if p,q,r collinear, and 0 otherwise */

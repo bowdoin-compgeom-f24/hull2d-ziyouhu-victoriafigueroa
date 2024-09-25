@@ -263,68 +263,93 @@ void print_vector(const char* label, vector<point2d> points) {
   
   printf("%s ", label);
   for (int i=0; i< points.size(); i++) {
-    printf("[%3d,%3d] ", points[i].x, points[i].y);
+    printf("[%3f,%3f] ", points[i].x, points[i].y);
   }
   printf("\n");
 }
 
+double compute_angle(point2d a, point2d b){
+  point2d zero_point;
+  zero_point.x=0;
+  zero_point.y=0;
+  double mag_x= sqrt(b.x*b.x + b.y*b.y);
+  double mag_y= sqrt(a.x*a.x + a.y*a.y);
+  // printf("Mag_A: %f\n",mag_y);
+  // printf("Mag_B: %f\n",mag_x);
+  double signed_area=signed_area2D(zero_point,a,b);
+  printf("\nSign area: %f\n", signed_area);
+  return asin((2* signed_area)/(mag_x*mag_y));
+}
+
 
 // For testing geom.cpp
-// int main(int argc, char** argv){
-// }
+int main(int argc, char** argv){
+  point2d a;
+  a.x=0;
+  a.y=3;
+  point2d b;
+  b.x=1;
+  b.y=1;
+  point2d c;
+  c.y=0;
+  c.x=0;
+  double output=compute_angle(a, b);
+  cout << "\nMAIN:" << signed_area2D(c,a,b) << endl;
+  printf("COMPUTED ANGLE: %f",output);
+}
 
 
 
-/* ****************************** */
-int main(int argc, char** argv) {
+// /* ****************************** */
+// int main(int argc, char** argv) {
 
-  //read number of points from user
-  if (argc!=2) {
-    printf("usage: viewPoints <nbPoints>\n");
-    exit(1); 
-  }
-  NPOINTS = atoi(argv[1]); 
-  printf("you entered n=%d\n", NPOINTS);
-  assert(NPOINTS >0); 
+//   //read number of points from user
+//   if (argc!=2) {
+//     printf("usage: viewPoints <nbPoints>\n");
+//     exit(1); 
+//   }
+//   NPOINTS = atoi(argv[1]); 
+//   printf("you entered n=%d\n", NPOINTS);
+//   assert(NPOINTS >0); 
 
-  //populate the points 
-  initialize_points_random(points, NPOINTS);
-  //print_vector("points:", points);
+//   //populate the points 
+//   initialize_points_random(points, NPOINTS);
+//   //print_vector("points:", points);
 
-  //compute the convex hull 
-  Rtimer rt1; 
-  rt_start(rt1); 
-  graham_scan(points, hull); 
-  rt_stop(rt1); 
-  print_vector("hull:", hull);
+//   //compute the convex hull 
+//   Rtimer rt1; 
+//   rt_start(rt1); 
+//   graham_scan(points, hull); 
+//   rt_stop(rt1); 
+//   print_vector("hull:", hull);
   
-  //print the timing 
-  char buf [1024]; 
-  rt_sprint(buf,rt1);
-  printf("hull time:  %s\n\n", buf);
-  fflush(stdout); 
+//   //print the timing 
+//   char buf [1024]; 
+//   rt_sprint(buf,rt1);
+//   printf("hull time:  %s\n\n", buf);
+//   fflush(stdout); 
 
  
-  //start the rendering 
-  /* initialize GLUT  */
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-  glutInitWindowSize(WINDOWSIZE, WINDOWSIZE);
-  glutInitWindowPosition(100,100);
-  glutCreateWindow(argv[0]);
+//   //start the rendering 
+//   /* initialize GLUT  */
+//   glutInit(&argc, argv);
+//   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+//   glutInitWindowSize(WINDOWSIZE, WINDOWSIZE);
+//   glutInitWindowPosition(100,100);
+//   glutCreateWindow(argv[0]);
 
-  /* register callback functions */
-  glutDisplayFunc(display); 
-  glutKeyboardFunc(keypress);
+//   /* register callback functions */
+//   glutDisplayFunc(display); 
+//   glutKeyboardFunc(keypress);
 
-  /* init GL */
-  /* set background color black*/
-  glClearColor(0, 0, 0, 0);   
+//   /* init GL */
+//   /* set background color black*/
+//   glClearColor(0, 0, 0, 0);   
   
-  /* give control to event handler */
-  glutMainLoop();
-  return 0;
-}
+//   /* give control to event handler */
+//   glutMainLoop();
+//   return 0;
+// }
 
 
 

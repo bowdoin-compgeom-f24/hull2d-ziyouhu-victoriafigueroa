@@ -7,7 +7,7 @@ using namespace std;
 
 
 typedef struct _point2d {
-  int x,y; 
+  double x,y; 
 } point2d;
 
 

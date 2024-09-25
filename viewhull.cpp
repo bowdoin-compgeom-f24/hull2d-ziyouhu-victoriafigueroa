@@ -276,7 +276,7 @@ double compute_angle(point2d a, point2d b){
   double mag_y= sqrt(a.x*a.x + a.y*a.y);
   // printf("Mag_A: %f\n",mag_y);
   // printf("Mag_B: %f\n",mag_x);
-  double signed_area=signed_area2D(zero_point,a,b);
+  double signed_area = signed_area2D(zero_point,a,b);
   printf("\nSign area: %f\n", signed_area);
   return asin((2* signed_area)/(mag_x*mag_y));
 }

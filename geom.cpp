@@ -15,16 +15,11 @@ double signed_area2D(point2d a, point2d b, point2d c) {
   point2d A; // a to b -- A
   point2d B; // a to c -- B
   B.x = c.x - a.x;
-  printf("\nB.x = c.x - a.x;: %f\n",B.x);
   B.y = c.y - a.y;
-  printf("\nB.y = c.y - a.y: %f\n", B.y);
   A.x = b.x - a.x;
-  printf("\nA.x = b.x - a.x;: %f\n",A.x);
   A.y = b.y - a.y;
-  printf("\nA.y = b.y - a.y;: %f\n", A.y);
   double parallelogram_area = B.y * A.x - B.x * A.y;
-  printf("\nArea of Parallelogram: %f\n",parallelogram_area);
-  return parallelogram_area*0.5; 
+  return parallelogram_area * 0.5; 
 }
 
 

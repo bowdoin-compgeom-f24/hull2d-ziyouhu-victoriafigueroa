@@ -268,33 +268,36 @@ void print_vector(const char* label, vector<point2d> points) {
   printf("\n");
 }
 
-double compute_angle(point2d a, point2d b){
-  point2d zero_point;
-  zero_point.x=0;
-  zero_point.y=0;
-  double mag_x= sqrt(b.x*b.x + b.y*b.y);
-  double mag_y= sqrt(a.x*a.x + a.y*a.y);
-  // printf("Mag_A: %f\n",mag_y);
-  // printf("Mag_B: %f\n",mag_x);
-  double signed_area = signed_area2D(zero_point,a,b);
+/*
+Calculate the angle between p and q, counter-clockwise
+*/
+double compute_angle(point2d p, point2d q){
+  point2d origin;
+  origin.x = 0;
+  origin.y = 0;
+
+  double mag_A = sqrt(p.x * p.x + p.y * p.y);
+  double mag_B = sqrt(q.x * q.x + q.y * q.y);
+  double signed_area = signed_area2D(origin, p, q);
+
   printf("\nSign area: %f\n", signed_area);
-  return asin((2* signed_area)/(mag_x*mag_y));
+  return asin((2 * signed_area)/(mag_A * mag_B));
 }
 
 
 // For testing geom.cpp
 int main(int argc, char** argv){
-  point2d a;
-  a.x=0;
-  a.y=3;
-  point2d b;
-  b.x=1;
-  b.y=1;
-  point2d c;
-  c.y=0;
-  c.x=0;
-  double output=compute_angle(a, b);
-  cout << "\nMAIN:" << signed_area2D(c,a,b) << endl;
+  point2d p;
+  p.x = 1;
+  p.y = 1;
+  point2d q;
+  q.x = 2;
+  q.y = 2;
+  point2d origin;
+  origin.y=0;
+  origin.x=0;
+  cout << "\nMAIN:" << signed_area2D(origin, p, q) << endl;
+  double output = compute_angle(p, q);
   printf("COMPUTED ANGLE: %f",output);
 }
 

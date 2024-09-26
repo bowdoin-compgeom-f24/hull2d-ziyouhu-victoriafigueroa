@@ -58,10 +58,6 @@ GLfloat Orange[3] = { 1, .5, 0};
 GLfloat Silver[3] = { 0.90, 0.91, 0.98};
 GLfloat Wheat[3] = { 0.847059 , 0.847059, 0.74902}; 
 
-
-
-
-
 /* global variables */
 
 //desired number of points, entered by the user on the command line
@@ -75,8 +71,6 @@ vector<point2d>  points;
 //note: needs to be global in order to be rendered
 vector<point2d>  hull; 
 
-
-
 //window size for the graphics window
 const int WINDOWSIZE = 500; 
 
@@ -87,14 +81,11 @@ const int WINDOWSIZE = 500;
 int NB_INIT_CHOICES = 11; 
 int  POINT_INIT_MODE = 0; //the first inititalizer
 
-
 /********************************************************************/
 /* forward declarations of functions */
 
 //print label, then the vector 
 void print_vector(const char* label, vector<point2d> p); 
-
-
 
 /* render the points. Each point is drawn as a small square.  */
 void draw_points(vector<point2d> pts); 
@@ -152,7 +143,6 @@ void initialize_points_circle(vector<point2d>& pts, int n) {
   }
 }
 
-
 void initialize_points_vertical_line(vector<point2d>&pts, int n){
   printf("\ninitialize points vertical line\n"); 
   //clear the vector just to be safe 
@@ -165,7 +155,6 @@ void initialize_points_vertical_line(vector<point2d>&pts, int n){
     pts.push_back(p); 
   }
 }
-
 
 /* ****************************** */
 /* Initializes pts with n points on a line.  The points are in the
@@ -184,6 +173,7 @@ void initialize_points_horizontal_line(vector<point2d>& pts, int n) {
     pts.push_back(p); 
   }
 }
+
 // creates points 
 void initialize_points_heart(vector<point2d>& pts, int n){
   pts.clear();
@@ -198,7 +188,6 @@ void initialize_points_heart(vector<point2d>& pts, int n){
   }
   printf("heart: initialized with %d points\n",n);
 }
-
 
 /* ****************************** */
 /* Initializes pts with n random points.  The points are in the
@@ -217,9 +206,6 @@ void initialize_points_random(vector<point2d>& pts, int n) {
     pts.push_back(p); 
   }
 }
-
-
-
 
 /* ****************************** */
 /* Initializes pts with n points on a cross-like shape.  The points are
@@ -266,9 +252,6 @@ void initialize_points_two_vertical(vector<point2d>& pts, int n) {
   }
 }
 
-
-
-
 /* ****************************** */
 /* print the vector of points */
 void print_vector(const char* label, vector<point2d> points) {
@@ -280,8 +263,16 @@ void print_vector(const char* label, vector<point2d> points) {
   printf("\n");
 }
 
+//For testing purposes
+// int main(int argc, char** argv){
+//   point2d a = {0, 0};
+//   point2d b = {1, 1};
+//   point2d c = {3, 3};
 
-// /* ****************************** */
+// }
+
+
+/* ****************************** */
 int main(int argc, char** argv) {
 
   //read number of points from user
@@ -295,11 +286,13 @@ int main(int argc, char** argv) {
 
   //populate the points 
   initialize_points_random(points, NPOINTS);
-  //print_vector("points:", points);
+  print_vector("points:", points);
+
 
   //compute the convex hull 
   Rtimer rt1; 
   rt_start(rt1); 
+
   graham_scan(points, hull); 
   rt_stop(rt1); 
   print_vector("hull:", hull);
@@ -331,8 +324,6 @@ int main(int argc, char** argv) {
   glutMainLoop();
   return 0;
 }
-
-
 
 
 /* ****************************** */
@@ -367,9 +358,6 @@ void display(void) {
   glFlush();
 }
 
-
-
-
 /* ****************************** */
 /* draw the points. each point is drawn as a small square
 */
@@ -393,10 +381,6 @@ void draw_points(vector<point2d> points){
     glEnd();
   }
 } //draw_points 
-
-
-
-
 
 /* ****************************** */
 /* Draw the hull; the points on the hull are expected to be in
@@ -427,8 +411,6 @@ void draw_hull(vector<point2d> hull){
     glEnd();
   }//if (hull not empty)
 }
-
-
 
 /* ****************************** */
 /* Handler for key presses. called whenever a key is spressed */

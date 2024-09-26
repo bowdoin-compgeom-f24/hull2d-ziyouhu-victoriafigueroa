@@ -5,6 +5,9 @@
 #include <cmath>
 #include <vector>
 #include <stack>
+#include <format>
+#include <iostream>
+
 using namespace std; 
 point2d start_point;
 
@@ -23,15 +26,11 @@ double signed_area2D(point2d a, point2d b, point2d c) {
   return parallelogram_area*0.5; 
 }
 
-
-
 /* **************************************** */
 /* return 1 if p,q,r collinear, and 0 otherwise */
 int collinear(point2d p, point2d q, point2d r) {
   return signed_area2D(p, q, r) == 0; 
 }
-
-
 
 /* **************************************** */
 /* return 1 if c is  strictly left of ab; 0 otherwise */
@@ -56,37 +55,60 @@ int left_on(point2d a, point2d b, point2d c) {
 
 /* computing angle of q, with respect to p */
 double compute_angle_pq(point2d p, point2d q){
-  return atan((q.y-p.y)/(q.x-p.x));
+  if (p.x == q.x && p.y == q.y){
+    return 0;
+  }
+  double val;
+  if ((q.x - p.x) == 0){
+    val = INFINITY;
+  }
+  else{
+    val = (q.y-p.y)/(q.x-p.x);
+  }
+  double rad = atan(val);
+  double degree = rad * 57.2958;
+  if (degree < 0){
+    degree = degree + 180;
+  }
+  return degree;
 }
 
 
 /* comparator for sorting points */
 bool compare_by_angle(point2d p, point2d q){
-  double p_angle=compute_angle_pq(start_point,p);
-  double q_angle=compute_angle_pq(start_point,q);
-  return p_angle<q_angle;
+  double p_angle = compute_angle_pq(start_point, p);
+  double q_angle = compute_angle_pq(start_point, q);
+  return p_angle < q_angle;
 }
-
 
 // compute the convex hull of pts, and store the points on the hull in hull
 void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
-
   printf("hull2d (graham scan): start\n"); 
   hull.clear(); //should be empty, but clear it to be safe
   stack<point2d> stack;
-  start_point=pts[0];
-  for(int i=1 ; i < pts.size(); i++){
-    if (pts[i].y<start_point.y){
-      start_point=pts[i];
+  start_point = pts[0];
+
+  // Checked! Good.
+  for(int i = 0; i < pts.size(); i++){
+    if (pts[i].y < start_point.y){
+      start_point = pts[i];
     }
   }
-  printf("LINE %d:\n", 83);
-  sort(pts.begin(),pts.end(),compare_by_angle);
+  printf("The start point is (%f, %f) \n", start_point.x, start_point.y);
+
+  // Checked! Good.
+  string ordered_points;
+  sort(pts.begin(), pts.end(), compare_by_angle);
+  for (int i = 0; i < pts.size(); i++){
+    point2d point = pts[i];
+    ordered_points = ordered_points + "(" + to_string(point.x) + ", " + to_string(point.y) + ") ";
+  }
+
+
   stack.push(pts[1]);
   stack.push(pts[2]);
   point2d* first=&pts[1];
   point2d* second=&pts[2];
-  printf("LINE %d:\n", 89);
   for(int j=3; j < pts.size(); j++){
     if(left_strictly(*first,*second,pts[j])){
       stack.push(pts[j]);
@@ -106,12 +128,11 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
       stack.push(pts[j]);
       second=&pts[j];
     }
-  printf("LINE %d:\n", 109);
   }
   printf("Stack Size: %lu",stack.size());
   while(!stack.empty()){
     point2d point = stack.top();
-    printf("\nThe point we are adding to hull is (%f, %f)\n", point.x, point.y);
+    //printf("\nThe point we are adding to hull is (%f, %f)\n", point.x, point.y);
     hull.push_back(point);
     stack.pop();
   }

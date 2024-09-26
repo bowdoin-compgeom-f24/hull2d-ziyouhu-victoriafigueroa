@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
-
+#include <stack>
 using namespace std; 
+point2d start_point;
 
 /* **************************************** */
 /* returns the signed area of triangle abc. The area is positive if c
@@ -19,7 +20,7 @@ double signed_area2D(point2d a, point2d b, point2d c) {
   A.x = b.x - a.x;
   A.y = b.y - a.y;
   double parallelogram_area = B.y * A.x - B.x * A.y;
-  return parallelogram_area * 0.5; 
+  return parallelogram_area*0.5; 
 }
 
 
@@ -52,15 +53,19 @@ int left_on(point2d a, point2d b, point2d c) {
   }
   return 0; 
 }
-// compute the angle from point a to point b
-// double compute_angle(point2d a, point2d b){
-//   point2d zero_point;
-//   zero_point.x=0;
-//   zero_point.y=0;
-//   double mag_x= sqrt(b.x*b.x + b.y*b.y);
-//   double mag_y= sqrt(a.x*a.x + a.y*a.y);
-//   return asin(2* signed_area2D(zero_point,a,b)/(mag_x*mag_y));
-// }
+
+/* computing angle of q, with respect to p */
+double compute_angle_pq(point2d p, point2d q){
+  return atan((q.y-p.y)/(q.x-p.x));
+}
+
+
+/* comparator for sorting points */
+bool compare_by_angle(point2d p, point2d q){
+  double p_angle=compute_angle_pq(start_point,p);
+  double q_angle=compute_angle_pq(start_point,q);
+  return p_angle<q_angle;
+}
 
 
 // compute the convex hull of pts, and store the points on the hull in hull
@@ -68,34 +73,48 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
 
   printf("hull2d (graham scan): start\n"); 
   hull.clear(); //should be empty, but clear it to be safe
-
-  point2d p_lowest=pts[0];
+  stack<point2d> stack;
+  start_point=pts[0];
   for(int i=1 ; i < pts.size(); i++){
-    if (pts[i].y<p_lowest.y){
-      p_lowest=pts[i];
+    if (pts[i].y<start_point.y){
+      start_point=pts[i];
     }
   }
-
-
-  // just for fun: at the moment we set the hull as the bounding box of
-  // pts.  erase this and insert your code instead
-  // int x1, x2, y1, y2;
-  // if (pts.size() > 0) {
-  //   x1 = x2 = pts[0].x;
-  //   y1 = y2 = pts[0].y;
-    
-  //   for (int i=1; i< pts.size(); i++) {
-  //     if (pts[i].x < x1) x1 = pts[i].x;
-  //     if (pts[i].x > x2) x2 = pts[i].x;
-  //     if (pts[i].y < y1) y1 = pts[i].y;
-  //     if (pts[i].y > y2) y2 = pts[i].y;
-  //   }
-  //   point2d p1 = {x1,y1}, p2 = {x2, y1}, p3 = {x2, y2}, p4 = {x1, y2}; 
-  //   hull.push_back(p1);
-  //   hull.push_back(p2);
-  //   hull.push_back(p3);
-  //   hull.push_back(p4);
-  //   }
+  printf("LINE %d:\n", 83);
+  sort(pts.begin(),pts.end(),compare_by_angle);
+  stack.push(pts[1]);
+  stack.push(pts[2]);
+  point2d* first=&pts[1];
+  point2d* second=&pts[2];
+  printf("LINE %d:\n", 89);
+  for(int j=3; j < pts.size(); j++){
+    if(left_strictly(*first,*second,pts[j])){
+      stack.push(pts[j]);
+      first=second;
+      second=&pts[j];
+    }
+    else{
+      while(!left_strictly(*first,*second,pts[j])){
+        stack.pop();
+        second=first;
+        point2d* temporary=&stack.top();
+        stack.pop();
+        first=&stack.top();
+        stack.push(*temporary);
+      }
+      first=second;
+      stack.push(pts[j]);
+      second=&pts[j];
+    }
+  printf("LINE %d:\n", 109);
+  }
+  printf("Stack Size: %lu",stack.size());
+  while(!stack.empty()){
+    point2d point = stack.top();
+    printf("\nThe point we are adding to hull is (%f, %f)\n", point.x, point.y);
+    hull.push_back(point);
+    stack.pop();
+  }
 
   
   printf("hull2d (graham scan): end\n"); 

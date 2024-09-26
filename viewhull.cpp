@@ -28,7 +28,7 @@
 #include <vector>
 using namespace std; 
 
-
+double heartrad = 5;
 
 
 //pre-defined colors for convenience 
@@ -184,8 +184,20 @@ void initialize_points_horizontal_line(vector<point2d>& pts, int n) {
     pts.push_back(p); 
   }
 }
+// creates points 
+void initialize_points_heart(vector<point2d>& pts, int n){
+  pts.clear();
 
+  double t=.01;
 
+  for (double a = 0 ; a < 2*M_PI; a += t){
+    point2d p;
+    p.x = heartrad*16 * sin(a)*sin(a)*sin(a);
+    p.y=heartrad*13*cos(a)-5*cos(2*a)-2*cos(3*a)-cos(4*a);
+    pts.push_back(p);
+  }
+  printf("heart: initialized with %d points\n",n);
+}
 
 
 /* ****************************** */
@@ -268,91 +280,57 @@ void print_vector(const char* label, vector<point2d> points) {
   printf("\n");
 }
 
-/*
-Calculate the angle between p and q, counter-clockwise
-*/
-double compute_angle(point2d p, point2d q){
-  point2d origin;
-  origin.x = 0;
-  origin.y = 0;
-
-  double mag_A = sqrt(p.x * p.x + p.y * p.y);
-  double mag_B = sqrt(q.x * q.x + q.y * q.y);
-  double signed_area = signed_area2D(origin, p, q);
-
-  printf("\nSign area: %f\n", signed_area);
-  return asin((2 * signed_area)/(mag_A * mag_B));
-}
-
-
-// For testing geom.cpp
-int main(int argc, char** argv){
-  point2d p;
-  p.x = 1;
-  p.y = 1;
-  point2d q;
-  q.x = 2;
-  q.y = 2;
-  point2d origin;
-  origin.y=0;
-  origin.x=0;
-  cout << "\nMAIN:" << signed_area2D(origin, p, q) << endl;
-  double output = compute_angle(p, q);
-  printf("COMPUTED ANGLE: %f",output);
-}
-
-
 
 // /* ****************************** */
-// int main(int argc, char** argv) {
+int main(int argc, char** argv) {
 
-//   //read number of points from user
-//   if (argc!=2) {
-//     printf("usage: viewPoints <nbPoints>\n");
-//     exit(1); 
-//   }
-//   NPOINTS = atoi(argv[1]); 
-//   printf("you entered n=%d\n", NPOINTS);
-//   assert(NPOINTS >0); 
+  //read number of points from user
+  if (argc!=2) {
+    printf("usage: viewPoints <nbPoints>\n");
+    exit(1); 
+  }
+  NPOINTS = atoi(argv[1]); 
+  printf("you entered n=%d\n", NPOINTS);
+  assert(NPOINTS >0); 
 
-//   //populate the points 
-//   initialize_points_random(points, NPOINTS);
-//   //print_vector("points:", points);
+  //populate the points 
+  initialize_points_random(points, NPOINTS);
+  //print_vector("points:", points);
 
-//   //compute the convex hull 
-//   Rtimer rt1; 
-//   rt_start(rt1); 
-//   graham_scan(points, hull); 
-//   rt_stop(rt1); 
-//   print_vector("hull:", hull);
+  //compute the convex hull 
+  Rtimer rt1; 
+  rt_start(rt1); 
+  graham_scan(points, hull); 
+  rt_stop(rt1); 
+  print_vector("hull:", hull);
   
-//   //print the timing 
-//   char buf [1024]; 
-//   rt_sprint(buf,rt1);
-//   printf("hull time:  %s\n\n", buf);
-//   fflush(stdout); 
+  //print the timing 
+  char buf [1024]; 
+  rt_sprint(buf,rt1);
+  printf("hull time:  %s\n\n", buf);
+  fflush(stdout); 
 
  
-//   //start the rendering 
-//   /* initialize GLUT  */
-//   glutInit(&argc, argv);
-//   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-//   glutInitWindowSize(WINDOWSIZE, WINDOWSIZE);
-//   glutInitWindowPosition(100,100);
-//   glutCreateWindow(argv[0]);
+  //start the rendering 
+  /* initialize GLUT  */
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+  glutInitWindowSize(WINDOWSIZE, WINDOWSIZE);
+  glutInitWindowPosition(100,100);
+  glutCreateWindow(argv[0]);
 
-//   /* register callback functions */
-//   glutDisplayFunc(display); 
-//   glutKeyboardFunc(keypress);
+  /* register callback functions */
+  glutDisplayFunc(display); 
+  glutKeyboardFunc(keypress);
 
-//   /* init GL */
-//   /* set background color black*/
-//   glClearColor(0, 0, 0, 0);   
+  /* init GL */
+  /* set background color black*/
+  glClearColor(0, 0, 0, 0);   
   
-//   /* give control to event handler */
-//   glutMainLoop();
-//   return 0;
-// }
+  /* give control to event handler */
+  glutMainLoop();
+  return 0;
+}
 
 
 
@@ -483,6 +461,8 @@ void keypress(unsigned char key, int x, int y) {
     case 5:
       initialize_points_two_vertical(points, NPOINTS);
       break;
+    case 6:
+      initialize_points_heart(points,NPOINTS);
     } //switch 
     //we changed the points, so we need to recompute the hull
     graham_scan(points, hull); 

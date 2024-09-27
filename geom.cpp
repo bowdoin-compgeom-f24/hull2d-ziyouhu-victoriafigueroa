@@ -78,6 +78,12 @@ double compute_angle_pq(point2d p, point2d q){
 bool compare_by_angle(point2d p, point2d q){
   double p_angle = compute_angle_pq(start_point, p);
   double q_angle = compute_angle_pq(start_point, q);
+  if(p_angle == q_angle){
+    if (p.x == q.x){
+      return p.y<q.y;
+    }
+    return p.x < q.x;
+  }
   return p_angle < q_angle;
 }
 
@@ -93,6 +99,11 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
     if (pts[i].y < start_point.y){
       start_point = pts[i];
     }
+    if(pts[i].y==start_point.y){
+      if(pts[i].x<start_point.x){
+        start_point=pts[i];
+      }
+    }
   }
   printf("The start point is (%f, %f) \n", start_point.x, start_point.y);
 
@@ -103,30 +114,38 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
     point2d point = pts[i];
     ordered_points = ordered_points + "(" + to_string(point.x) + ", " + to_string(point.y) + ") ";
   }
+  cout << ordered_points << endl;
 
 
-  stack.push(pts[1]);
-  stack.push(pts[2]);
-  point2d* first=&pts[1];
-  point2d* second=&pts[2];
-  for(int j=3; j < pts.size(); j++){
-    if(left_strictly(*first,*second,pts[j])){
+  stack.push(pts[0]); //p 
+  stack.push(pts[1]); // q
+  // point2d* first=&pts[0];
+  // point2d* second=&pts[1];
+  point2d first=pts[0];
+  point2d second=pts[1];
+  for(int j=2; j < pts.size(); j++){
+    if(left_on(first,second,pts[j])){
       stack.push(pts[j]);
       first=second;
-      second=&pts[j];
+      second=pts[j];
     }
     else{
-      while(!left_strictly(*first,*second,pts[j])){
+      while(!left_on(first,second,pts[j])){
         stack.pop();
         second=first;
-        point2d* temporary=&stack.top();
         stack.pop();
-        first=&stack.top();
-        stack.push(*temporary);
+        cout << stack.size() << endl;
+        printf("Line 135: First: (%f, %f) Second: (%f, %f)\n", (first).x, (first).y, (second).x, (second).y);
+        first=stack.top();
+        printf("LINE 137\n");
+        stack.push(second);
+        printf("LINE 139\n");
       }
       first=second;
+      printf("LINE 142\n");
       stack.push(pts[j]);
-      second=&pts[j];
+      printf("LINE 144\n");
+      second=pts[j];
     }
   }
   printf("Stack Size: %lu",stack.size());

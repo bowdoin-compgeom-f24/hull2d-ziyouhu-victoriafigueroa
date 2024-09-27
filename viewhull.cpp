@@ -251,6 +251,85 @@ void initialize_points_two_vertical(vector<point2d>& pts, int n) {
     pts.push_back(p); 
   }
 }
+void initialize_points_1(vector<point2d>&pts, int n){
+  printf("\ninitialize points 1\n"); 
+  pts.clear();
+  assert(pts.size() == 0);
+
+  point2d p;
+  int pos, pos2;
+  for (int i = 0; i < n; i++)
+  {
+    switch (i % 7) {
+      case 0:
+      case 1:
+        // Base
+        p.y = random() % (int)(.1*WINDOWSIZE);
+        p.y += (int) (0.15 * WINDOWSIZE);
+        p.x = random() % (int)(0.3*WINDOWSIZE);
+        p.x += (int) (0.35 * WINDOWSIZE);
+        break;
+      case 2:
+        pos = random() % (int) (0.1*WINDOWSIZE);
+        p.x = pos; p.y = pos;
+        p.x += (int) (0.4 * WINDOWSIZE);
+        p.y += (int) (0.7*WINDOWSIZE);
+        pos2 = random() % (int) (0.05*WINDOWSIZE);
+        p.x -= pos2;
+        p.y += pos2;
+        break;
+      case 3:
+        // Colinear case
+        p.x = (int)(0.25*WINDOWSIZE) + random() % ((int)(0.5*WINDOWSIZE));
+        p.y = (int) (0.10*WINDOWSIZE);
+        break;
+      default:
+        //stem
+        p.y = (int) (0.25*WINDOWSIZE);
+        p.y += random() % (int) (0.6*WINDOWSIZE);
+        p.x = (int) (0.45*WINDOWSIZE);
+        p.x += random() % (int) (0.1*WINDOWSIZE);
+        break;
+    }
+    pts.push_back(p);
+  }
+}
+
+
+void initialize_points_2(vector<point2d>&pts, int n){
+  printf("\ninitialize points 2\n"); 
+  pts.clear();
+  assert(pts.size() == 0);
+
+  point2d p;
+  int x_noise, y_noise;
+  int pos, pos2;
+  for (int i = 0; i < n; i++)
+  {
+    switch (i % 3) {
+      case 0:
+        p.x = (int)(0.25*WINDOWSIZE) + random() % ((int)(0.5*WINDOWSIZE));
+        p.y = (int) (0.15*WINDOWSIZE);
+        break;
+      case 1:
+        pos = random() % (int)(0.5*WINDOWSIZE);
+        p.x = pos; p.y = pos;
+        p.x += (int) (0.25*WINDOWSIZE);
+        p.y += (int) (0.15*WINDOWSIZE);
+        break;
+      case 2: 
+        pos2 = random() % 180;
+        p.x = (int)(0.5 * WINDOWSIZE) + (int) ((0.25*WINDOWSIZE) * cos((M_PI * pos2)/180));
+        p.y = (int)(0.65 * WINDOWSIZE) + (int) ((0.25*WINDOWSIZE) * sin((M_PI * pos2)/180));
+        break;
+    }
+    x_noise = random() % ((int) (0.05*WINDOWSIZE));
+    y_noise = random() % ((int) (0.05*WINDOWSIZE));
+    p.x += x_noise;
+    p.y += y_noise;
+    pts.push_back(p);
+  }
+}
 
 /* ****************************** */
 /* print the vector of points */
@@ -445,6 +524,12 @@ void keypress(unsigned char key, int x, int y) {
       break;
     case 6:
       initialize_points_heart(points,NPOINTS);
+    case 7:
+      initialize_points_1(points,NPOINTS);
+      break;
+    case 8:
+      initialize_points_2(points,NPOINTS);
+      break;
     } //switch 
     //we changed the points, so we need to recompute the hull
     graham_scan(points, hull); 

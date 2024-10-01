@@ -78,7 +78,7 @@ const int WINDOWSIZE = 500;
    user can cycle through them by pressing 'i'. Check out the display()
    function.
 */
-int NB_INIT_CHOICES = 11; 
+int NB_INIT_CHOICES = 12; 
 int  POINT_INIT_MODE = 0; //the first inititalizer
 
 /********************************************************************/
@@ -330,6 +330,56 @@ void initialize_points_2(vector<point2d>&pts, int n){
     pts.push_back(p);
   }
 }
+void initialize_points_thin_cross(vector<point2d>&pts, int n) {
+  printf("\ninitialize points thin cross\n");
+  pts.clear();
+  point2d p;
+  for (int i = 0; i < n; i++) {
+    // put points on horizontal line
+    if (i % 2 == 0) {
+      p.x = random() % (int)(WINDOWSIZE);
+      p.y = WINDOWSIZE/2;
+    }
+    // put points on vertical line
+    if (i % 2 == 1) {
+      p.x = WINDOWSIZE/2;
+      p.y = random() % (int)(WINDOWSIZE);
+    }
+    pts.push_back(p);
+  }
+}
+void initialize_points_triangle(vector<point2d>&pts, int n) {
+  printf("\ninitialize points triangle\n");
+  pts.clear();
+  point2d p;
+  for (int i = 0; i < n; i++) {
+    // first three points make the points of the triangle
+    if (i == 0) {
+      p.x = WINDOWSIZE/2;
+      p.y = WINDOWSIZE;
+    }
+    else if (i == 1) {
+      p.x = 0;
+      p.y = 0;
+    }
+    else if (i == 2) {
+      p.x = WINDOWSIZE;
+      p.y = 0;
+    }
+    // all the other points are randomly distributed in the triangle
+    else {
+      double a = random() / static_cast<double>(RAND_MAX);
+      double b = random() / static_cast<double>(RAND_MAX);
+      if ((a + b) > 1) {
+        a = 1 - a;
+        b = 1 - b;
+      }
+      p.x = a*WINDOWSIZE*0.5 + b*WINDOWSIZE;
+      p.y = a*WINDOWSIZE;
+    }
+    pts.push_back(p);
+  }
+}
 
 /* ****************************** */
 /* print the vector of points */
@@ -471,7 +521,7 @@ void draw_hull(vector<point2d> hull){
   //set color 
   glColor3fv(red);   //this should be a constant
   
-  if (hull.size() >0) {
+  if (hull.size() >2) {
     int i; 
     for (i=0; i< hull.size()-1; i++) {
       
@@ -529,6 +579,15 @@ void keypress(unsigned char key, int x, int y) {
       break;
     case 8:
       initialize_points_2(points,NPOINTS);
+      break;
+    case 9:
+      initialize_points_heart(points,NPOINTS);
+      break;
+    case 10:
+      initialize_points_thin_cross(points,NPOINTS);
+      break;
+    case 11:
+      initialize_points_triangle(points,NPOINTS);
       break;
     } //switch 
     //we changed the points, so we need to recompute the hull

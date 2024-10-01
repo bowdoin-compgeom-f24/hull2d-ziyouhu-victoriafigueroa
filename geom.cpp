@@ -10,6 +10,7 @@
 
 using namespace std; 
 point2d start_point;
+double epsilon = pow(10,-15);
 
 /* **************************************** */
 /* returns the signed area of triangle abc. The area is positive if c
@@ -29,7 +30,8 @@ double signed_area2D(point2d a, point2d b, point2d c) {
 /* **************************************** */
 /* return 1 if p,q,r collinear, and 0 otherwise */
 int collinear(point2d p, point2d q, point2d r) {
-  return signed_area2D(p, q, r) == 0; 
+  double signed_area = signed_area2D(p, q, r);
+  return  abs(signed_area) < epsilon ; 
 }
 
 /* **************************************** */
@@ -116,7 +118,6 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   }
   cout << ordered_points << endl;
 
-
   stack.push(pts[0]); //p 
   stack.push(pts[1]); // q
   // point2d* first=&pts[0];
@@ -125,9 +126,16 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
   point2d second=pts[1];
   for(int j=2; j < pts.size(); j++){
     if(left_on(first,second,pts[j])){
-      stack.push(pts[j]);
-      first=second;
-      second=pts[j];
+      if (collinear(first,second,pts[j])){
+        stack.pop();
+        second=pts[j];
+        stack.push(pts[j]);
+      }
+      else{
+        stack.push(pts[j]);
+        first=second;
+        second=pts[j];
+      }
     }
     else{
       while(!left_on(first,second,pts[j])){
@@ -135,27 +143,30 @@ void graham_scan(vector<point2d>& pts, vector<point2d>& hull ) {
         second=first;
         stack.pop();
         cout << stack.size() << endl;
-        printf("Line 135: First: (%f, %f) Second: (%f, %f)\n", (first).x, (first).y, (second).x, (second).y);
         first=stack.top();
-        printf("LINE 137\n");
         stack.push(second);
-        printf("LINE 139\n");
       }
-      first=second;
-      printf("LINE 142\n");
-      stack.push(pts[j]);
-      printf("LINE 144\n");
-      second=pts[j];
+      if (collinear(first,second,pts[j])){
+        stack.pop();
+        second=pts[j];
+        stack.push(pts[j]);
+      }
+      else{
+        stack.push(pts[j]);
+        first=second;
+        second=pts[j];
+      }
     }
   }
   printf("Stack Size: %lu",stack.size());
   while(!stack.empty()){
     point2d point = stack.top();
-    //printf("\nThe point we are adding to hull is (%f, %f)\n", point.x, point.y);
+    printf("\nThe point we are adding to hull is (%f, %f)\n", point.x, point.y);
+
     hull.push_back(point);
     stack.pop();
   }
-
+  
   
   printf("hull2d (graham scan): end\n"); 
   return; 

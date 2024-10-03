@@ -8,7 +8,7 @@
 
 ## Image of OUR customized initializers
 `initialize_points_vertical_line()`
-![vertical line](c_vertical.png)
+![vertical line](c_vertical.png = 250x)
 `initialize_points_two_vertical()`
 
 ![two vertical lines](c_two_vertical.png)
@@ -72,11 +72,20 @@ N/A
 
 ## Time Allocation:
 
-### Thinking: 4 hours
-### Programming: 8 hours
-### Testing: 4 hours
-### Documenting: 4 hours
-### Total: 20 hours
+### Thinking: 
+4 hours
+
+### Programming: 
+8 hours
+
+### Testing: 
+4 hours
+
+### Documenting: 
+4 hours
+
+### Total: 
+20 hours
 
 ## Reflection:
 ### How challenging did you find this project? 

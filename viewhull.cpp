@@ -559,7 +559,7 @@ void draw_hull(vector<point2d> hull){
   //set color 
   glColor3fv(red);   //this should be a constant
   
-  if (hull.size() >2) {
+  if (hull.size() > 2) {
     int i; 
     for (i=0; i< hull.size()-1; i++) {
       

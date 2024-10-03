@@ -8,19 +8,24 @@
 
 ## Image of OUR customized initializers
 `initialize_points_vertical_line()`
-![alt text](/Users/mhu/Documents/3250_ziyouhu/hull2d-ziyouhu-victoriafigueroa/vertical.png)
-
+![vertical line](c_vertical.png)
 `initialize_points_two_vertical()`
-![alt text](/Users/mhu/Documents/3250_ziyouhu/hull2d-ziyouhu-victoriafigueroa/vertical.png)
+
+![two vertical lines](c_two_vertical.png)
 
 ## Image of CLASSMATES' initializers
 `initialize_points_wave()`
 
+![wave](c_wave.png)
+
 `intialize_points_1()`
+![one](c_one.png)
 
 ## Convex Hulls Images:
 
 `initialize_points_circle(points, NPOINTS) `
+![circle](c_circle.png)
+
 `initialize_points_cross(points, NPOINTS)`
 `initialize_points_horizontal_line(points, NPOINTS)`
 `initialize_points_random(points, NPOINTS)`

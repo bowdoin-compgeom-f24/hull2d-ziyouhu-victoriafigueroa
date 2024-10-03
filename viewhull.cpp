@@ -75,7 +75,7 @@ const int WINDOWSIZE = 500;
    user can cycle through them by pressing 'i'. Check out the display()
    function.
 */
-int NB_INIT_CHOICES = 14; 
+int NB_INIT_CHOICES = 13; 
 int POINT_INIT_MODE = 0; //the first inititalizer
 
 /********************************************************************/
@@ -561,7 +561,7 @@ void draw_hull(vector<point2d> hull){
   
   if (hull.size() > 2) {
     int i; 
-    for (i=0; i< hull.size()-1; i++) {
+    for (i = 0; i< hull.size()-1; i++) {
       
       //draw a line from  i to i+1
       glBegin(GL_LINES);
@@ -611,26 +611,24 @@ void keypress(unsigned char key, int x, int y) {
       initialize_points_two_vertical(points, NPOINTS);
       break;
     case 6:
-      initialize_points_heart(points,NPOINTS);
+      initialize_points_1(points, NPOINTS);
+      break;
     case 7:
-      initialize_points_1(points,NPOINTS);
+      initialize_points_2(points, NPOINTS);
       break;
     case 8:
-      initialize_points_2(points,NPOINTS);
+      initialize_points_heart(points, NPOINTS);
       break;
     case 9:
-      initialize_points_heart(points,NPOINTS);
+      initialize_points_thin_cross(points, NPOINTS);
       break;
     case 10:
-      initialize_points_thin_cross(points,NPOINTS);
+      initialize_points_triangle(points, NPOINTS);
       break;
     case 11:
-      initialize_points_triangle(points,NPOINTS);
-      break;
-    case 12:
       initialize_points_hexagon(points, NPOINTS);
       break;
-    case 13:
+    case 12:
       initialize_points_wave(points, NPOINTS);
       break;
     }

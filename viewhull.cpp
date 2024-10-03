@@ -3,9 +3,6 @@
    What it does: Draws a set of points in the default 2D ortho
    projection.  Includes a tentative function for printing and drawing
    a list of points (assumed to be a convex hull).
-   
-   This code is provided as a startup for your 2d hull.  Change it as
-   needed to work with your project.
 */
 
 #include "geom.h"
@@ -47,7 +44,7 @@ GLfloat DarkBrown[3] = { 0.36, 0.25, 0.20};
 GLfloat DarkTan[3] = { 0.59, 0.41, 0.31};
 GLfloat Maroon[3]= { 0.556863, 0.137255, 0.419608}; 
 GLfloat DarkWood[3] = { 0.52, 0.37, 0.26}; 
-GLfloat  Copper[3] = { 0.72,  0.45,  0.20};
+GLfloat Copper[3] = { 0.72,  0.45,  0.20};
 GLfloat green1[3] = {.5, 1, 0.5};
 GLfloat green2[3] = {0.0, .8, 0.0};
 GLfloat green3[3] = {0.0, .5, 0.0};
@@ -78,8 +75,8 @@ const int WINDOWSIZE = 500;
    user can cycle through them by pressing 'i'. Check out the display()
    function.
 */
-int NB_INIT_CHOICES = 12; 
-int  POINT_INIT_MODE = 0; //the first inititalizer
+int NB_INIT_CHOICES = 14; 
+int POINT_INIT_MODE = 0; //the first inititalizer
 
 /********************************************************************/
 /* forward declarations of functions */
@@ -94,32 +91,16 @@ void draw_points(vector<point2d> pts);
    boundary order (either ccw or cw), otherwise it will look
    zig-zaagged.  
 */
-  void draw_hull(vector<point2d> hull); 
-
+void draw_hull(vector<point2d> hull); 
 
 void display(void);
 void keypress(unsigned char key, int x, int y);
-
-// initializer function
-void initialize_points_circle(vector<point2d>& pts, int n); 
-void initialize_points_horizontal_line(vector<point2d>&pts, int n);
-void initialize_points_random(vector<point2d>&pts, int n) ;
-void initialize_points_cross(vector<point2d>&pts, int n) ;
-
-// Customized initializer
-void initialize_points_vertical_line(vector<point2d>&pts, int n);
-void initialize_points_star(vector<point2d>& pts, int n);
-
-
-/********************************************************************/
-
 
 /* ****************************** */
 /* Initializes pts with n points on two circles.  The points are in the
    range [0, WINSIZE] x [0, WINSIZE].
 */ 
 void initialize_points_circle(vector<point2d>& pts, int n) {
-
   printf("\ninitialize points circle\n"); 
   //clear the vector just to be safe 
   pts.clear(); 
@@ -143,7 +124,7 @@ void initialize_points_circle(vector<point2d>& pts, int n) {
   }
 }
 
-void initialize_points_vertical_line(vector<point2d>&pts, int n){
+void initialize_points_vertical_line(vector<point2d>& pts, int n){
   printf("\ninitialize points vertical line\n"); 
   //clear the vector just to be safe 
   pts.clear(); 
@@ -174,19 +155,23 @@ void initialize_points_horizontal_line(vector<point2d>& pts, int n) {
   }
 }
 
-// creates points 
-void initialize_points_heart(vector<point2d>& pts, int n){
-  pts.clear();
+/* initializes n points in the shape of a heart
+ * used equation from Wolfram MathWorld
+ */
+void initialize_points_heart(vector<point2d>& pts, int n) {
+  printf("\ninitialize points heart\n"); 
+  pts.clear(); // clear it out for safety
 
-  double t=.01;
+  double t = (2*M_PI) / n; // defining step size this way will give us n points
+  point2d p;
+  int SCALING_FACTOR = 100; // ensures that the heart is a good size
 
-  for (double a = 0 ; a < 2*M_PI; a += t){
-    point2d p;
-    p.x = heartrad*16 * sin(a)*sin(a)*sin(a);
-    p.y=heartrad*13*cos(a)-5*cos(2*a)-2*cos(3*a)-cos(4*a);
+  for (double a = 0; a<2*M_PI; a+=t) {
+    p.x = WINDOWSIZE/2 + SCALING_FACTOR*(sqrt(2) * sin(a)*sin(a)*sin(a))+ (random() % ((int)(.07*WINDOWSIZE)));
+    p.y = WINDOWSIZE/2 + SCALING_FACTOR*(-cos(a)*cos(a)*cos(a) - cos(a)*cos(a) + 2*cos(a)) + (random() % ((int)(.07*WINDOWSIZE)));
     pts.push_back(p);
   }
-  printf("heart: initialized with %d points\n",n);
+  printf("heart inititalied with %lu points\n", pts.size());
 }
 
 /* ****************************** */
@@ -194,15 +179,14 @@ void initialize_points_heart(vector<point2d>& pts, int n){
    range [0, WINSIZE] x [0, WINSIZE].
 */ 
 void initialize_points_random(vector<point2d>& pts, int n) {
-
-   printf("\ninitialize points random\n"); 
+  printf("\ninitialize points random\n"); 
   //clear the vector just to be safe 
   pts.clear(); 
 
   point2d p; 
   for (int i=0; i<n; i++) {
     p.x = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE)); 
-    p.y =  (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE));
+    p.y = (int)(.3*WINDOWSIZE)/2 + random() % ((int)(.7*WINDOWSIZE));
     pts.push_back(p); 
   }
 }
@@ -212,7 +196,6 @@ void initialize_points_random(vector<point2d>& pts, int n) {
    in the range (0,0) to (WINSIZE,WINSIZE).
 */ 
 void initialize_points_cross(vector<point2d>& pts, int n) {
-  
   printf("\ninitialize points cross\n"); 
   //clear the vector just to be safe 
   pts.clear(); 
@@ -251,6 +234,7 @@ void initialize_points_two_vertical(vector<point2d>& pts, int n) {
     pts.push_back(p); 
   }
 }
+
 void initialize_points_1(vector<point2d>&pts, int n){
   printf("\ninitialize points 1\n"); 
   pts.clear();
@@ -295,7 +279,6 @@ void initialize_points_1(vector<point2d>&pts, int n){
   }
 }
 
-
 void initialize_points_2(vector<point2d>&pts, int n){
   printf("\ninitialize points 2\n"); 
   pts.clear();
@@ -330,6 +313,7 @@ void initialize_points_2(vector<point2d>&pts, int n){
     pts.push_back(p);
   }
 }
+
 void initialize_points_thin_cross(vector<point2d>&pts, int n) {
   printf("\ninitialize points thin cross\n");
   pts.clear();
@@ -348,6 +332,7 @@ void initialize_points_thin_cross(vector<point2d>&pts, int n) {
     pts.push_back(p);
   }
 }
+
 void initialize_points_triangle(vector<point2d>&pts, int n) {
   printf("\ninitialize points triangle\n");
   pts.clear();
@@ -381,31 +366,86 @@ void initialize_points_triangle(vector<point2d>&pts, int n) {
   }
 }
 
+// Function to initialize points in a wave shape based on the sine function
+void initialize_points_wave(vector<point2d>& pts, int n){
+printf("\ninitialize points wave\n");
+  //clear the vector just to be safe
+  pts.clear();
+  double step = (double)WINDOWSIZE / n;
+  double amplitude = 100;  // Height of the wave
+  double frequency = 0.1;  // Controls the number of waves
+  point2d p;
+  for (int i = 0; i < n; ++i) {
+    p.x = i * step;
+    p.y = WINDOWSIZE / 2 + amplitude * sin(frequency * p.x);
+    pts.push_back(p);
+  }
+}
+
+/* ****************************** */
+// Helper function to check if a point is inside a convex polygon
+bool is_point_on_polygon(const point2d& p, const vector<point2d>& polygon) {
+    int n = polygon.size();
+    double angle = 0;
+    for (int i = 0; i < n; i++) {
+        point2d p1 = {polygon[i].x - p.x, polygon[i].y - p.y};
+        point2d p2 = {polygon[(i + 1) % n].x - p.x, polygon[(i + 1) % n].y - p.y};
+        double cross = p1.x * p2.y - p2.x * p1.y;
+        double dot = p1.x * p2.x + p1.y * p2.y;
+        angle += atan2(cross, dot);
+    }
+    return fabs(fabs(angle) - 2 * M_PI) < 1e-6;  // Check if the angle is approximately 2π
+}
+
+// Function to initialize points in a hexagon
+void initialize_points_hexagon(vector<point2d>& pts, int n) {
+    pts.clear();
+    // Define the center of the hexagon
+    double centerX = WINDOWSIZE / 2.0;
+    double centerY = WINDOWSIZE / 2.0;
+    // Set the radius of the hexagon (distance from center to any vertex)
+    double radius = WINDOWSIZE / 4.0;
+    // Number of sides for the hexagon
+    int numSides = 6;
+    // Angle between each vertex
+    double angleStep = 2 * M_PI / numSides;
+    // Add hexagon vertices
+    vector<point2d> hexagonVertices;
+    for (int i = 0; i < numSides; ++i) {
+        point2d p;
+        p.x = centerX + radius * cos(i * angleStep);
+        p.y = centerY + radius * sin(i * angleStep);
+        pts.push_back(p);  // Store the hexagon vertices in the pts list
+        hexagonVertices.push_back(p);  // Store the hexagon vertices separately for point-in-polygon check
+    }
+    // Add random points inside the hexagon boundary
+    int generatedPoints = 0;
+    while (generatedPoints < n) {
+        point2d p;
+        // Generate a random point within a bounding box around the hexagon
+        p.x = centerX + (((double)rand() / RAND_MAX) * 2 - 1) * radius;
+        p.y = centerY + (((double)rand() / RAND_MAX) * 2 - 1) * radius;
+        if (is_point_on_polygon(p, hexagonVertices)) {
+            pts.push_back(p);
+            generatedPoints++;
+        }
+    }
+}
+
 /* ****************************** */
 /* print the vector of points */
 void print_vector(const char* label, vector<point2d> points) {
-  
   printf("%s ", label);
-  for (int i=0; i< points.size(); i++) {
+  for (int i=0; i < points.size(); i++) {
     printf("[%3f,%3f] ", points[i].x, points[i].y);
   }
   printf("\n");
 }
 
-//For testing purposes
-// int main(int argc, char** argv){
-//   point2d a = {0, 0};
-//   point2d b = {1, 1};
-//   point2d c = {3, 3};
-
-// }
-
-
 /* ****************************** */
 int main(int argc, char** argv) {
-
   //read number of points from user
-  if (argc!=2) {
+  if (argc != 2) {
     printf("usage: viewPoints <nbPoints>\n");
     exit(1); 
   }
@@ -413,10 +453,9 @@ int main(int argc, char** argv) {
   printf("you entered n=%d\n", NPOINTS);
   assert(NPOINTS >0); 
 
-  //populate the points 
+  // populate the points 
   initialize_points_random(points, NPOINTS);
   print_vector("points:", points);
-
 
   //compute the convex hull 
   Rtimer rt1; 
@@ -431,7 +470,6 @@ int main(int argc, char** argv) {
   rt_sprint(buf,rt1);
   printf("hull time:  %s\n\n", buf);
   fflush(stdout); 
-
  
   //start the rendering 
   /* initialize GLUT  */
@@ -589,15 +627,20 @@ void keypress(unsigned char key, int x, int y) {
     case 11:
       initialize_points_triangle(points,NPOINTS);
       break;
-    } //switch 
+    case 12:
+      initialize_points_hexagon(points, NPOINTS);
+      break;
+    case 13:
+      initialize_points_wave(points, NPOINTS);
+      break;
+    }
     //we changed the points, so we need to recompute the hull
     graham_scan(points, hull); 
 
     //we changed stuff, so we need to tell GL to redraw
     glutPostRedisplay();
 
-  } //switch (key)
-
+  }
 }//keypress
 
 

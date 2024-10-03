@@ -8,7 +8,7 @@
 
 ## Image of OUR customized initializers
 `initialize_points_vertical_line()`
-![vertical line](c_vertical.png =250x)
+![vertical line](c_vertical.png)
 `initialize_points_two_vertical()`
 
 ![two vertical lines](c_two_vertical.png)
